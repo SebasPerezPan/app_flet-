@@ -10,4 +10,6 @@ router.routes = {
   # "/home": Screen_lock,
   "/": IndexView,
   "/settings": SettingsView
+
+#Aqui ponemos las paginas.
 }
