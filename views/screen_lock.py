@@ -6,11 +6,21 @@ import threading
 import math
 
 def Screen_lock(router_data: Union[Router, str, None] = None):
+    
     # def animate(e):
     #     c.content = c2 if c.content == c1 else c1
     #     c.update()
+
+    # Anadi la lectura para saber a donde ir.
     def change_page():
-        router_data.page.go("/")
+        with open("./views/data.csv", "r") as reader:
+            for line in reader:    
+                data = line.split(",")
+                if data[0] == "0":
+                    router_data.page.go("/register")
+                else:
+                    router_data.page.go("/")
+
         # router_data.body.update()
         # router_data.page.window_destroy()
         # router_data.page.update()
@@ -18,34 +28,31 @@ def Screen_lock(router_data: Union[Router, str, None] = None):
     timer = threading.Timer(2, change_page)
 
 # Inicia el temporizador
-    timer.start()
-
     
-    conteiner = ft.Container(
-            alignment=ft.alignment.center,
-            gradient=ft.LinearGradient(
-                begin=ft.alignment.top_left,
-                end=ft.alignment.Alignment(0.8, 1),
-                colors=[
-                    "0xff1f005c",
-                    "0xff5b0060",
-                    "0xff870160",
-                    "0xffac255e",
-                    "0xffca485c",
-                    "0xffe16b5c",
-                    "0xfff39060",
-                    "0xffffb56b",
-                ],
-                tile_mode=ft.GradientTileMode.MIRROR,
-                rotation=math.pi / 3,
+    timer.start()
+#El contenedor es extrano, pero no logro que pueda ajustarse a la pantalla.
+    container = ft.Container(
+            content=ft.Text(
+                "newTab",
+                color="gray",
+                size=30,
+                weight="bold",
             ),
-            width=150,
-            height=150,
-            border_radius=5,
+            alignment=ft.alignment.center,
+            bgcolor="black",
+            expand=True,
         )
     
-  
+    second_container = ft.Container(
+        content=container,
+        width=375,  
+        height=812,
+        bgcolor="black",
+        alignment=ft.alignment.center,
+    )
+
     router_data.page.title = "screen_lock"
-    # router_data.page.vertical_alignment = ft.MainAxisAlignment.CENTER
+    #router_data.page.vertical_alignment = ft.MainAxisAlignment.CENTER
+    router_data.page.add(second_container)
     
-    return conteiner
+    return second_container
